@@ -20,5 +20,13 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from .utils import *
-from .test_runners import *
+__ALL__ = ['ProjectTestRunner']
+
+from django.conf import settings
+from django.test.runner import DiscoverRunner
+
+
+class ProjectTestRunner(DiscoverRunner):
+    def build_suite(self, test_labels=None, extra_tests=None, **kwargs):
+        test_labels = test_labels or settings.TEST_APPS
+        return super(ProjectTestRunner, self).build_suite(test_labels, extra_tests, **kwargs)
