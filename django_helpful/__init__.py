@@ -21,4 +21,8 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from .utils import *
-from .test_runners import *
+
+try:
+    from .test_runners import *
+except ImportError:
+    pass
