@@ -1,0 +1,73 @@
+{% extends base_template %}
+{% load i18n helpful_tags %}
+
+{% block title %}
+{{ model_verbose_name_plural }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li class="active">
+        {{ model_verbose_name_plural }}
+    </li>
+{% endblock %}
+
+{% block content %}
+    {% block headline %}
+        <h1>{{ model_verbose_name_plural }}</h1>
+    {% endblock %}
+    <p class="pul-right">{% block buttons %}<a href="./create" class="btn btn-primary">{% trans "Create new" %}</a>{% endblock %}</p>
+    {% block search %}
+        <form method="GET" role="search" class="form-inline" id="list_filter_form">
+            {% block search_form %}
+                {% query_string_as_hidden_fields page=1 q="" %}
+                <div class="form-group">
+                    <input type="text" class="form-control list-search-input" name="q" placeholder="{% trans "Filter" %}" value="{{ search_query }}"/>
+                </div>
+                <button type="submit" class="btn btn-primary">{% trans "Filtern" %}</button>
+                {% if search_query %}
+                    <a href="{% query_string page=1 q="" %}" class="btn btn-default">{% trans "Clear" %}</a>
+                {% endif %}
+            {% endblock %}
+        </form>
+    {% endblock %}
+    {% block list %}
+        <table class="table table-striped">
+            <thead>
+            {% block table_head %}
+                <tr>
+                    <th><a href="{{ sort_helper.get_sort_query_by_id }}">{% trans "ID" %}</a></th>
+                    <th></th>
+                </tr>
+            {% endblock %}
+            </thead>
+            <tbody>
+            {% for object in object_list %}
+                {% block table_row %}
+                    <tr>
+                        <td>{{ object.pk }}</td>
+                        <td><a href="{{ object.get_absolute_url }}">{{ object }}</a></td>
+                    </tr>
+                {% endblock %}
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endblock %}
+    {% block pagination %}
+        {% if is_paginated %}
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li><a href="{% query_string page=page_obj.previous_page_number  %}">&laquo;</a></li>
+                {% endif %}
+                {% for page_number in paginator.page_range %}
+                    <li {% if page_number == page_obj.number %}class="active"{% endif %}>
+                        <a href="{% query_string page=page_number %}">{{ page_number }}</a>
+                    </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li><a href="{% query_string page=page_obj.next_page_number  %}">&raquo;</a></li>
+                {% endif %}
+            </ul>
+        {% endif %}
+    {% endblock %}
+{% endblock %}

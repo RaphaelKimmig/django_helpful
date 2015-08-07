@@ -13,7 +13,9 @@ setup(
     license = 'BSD',
     packages=['django_helpful', 'django_helpful.templatetags'],
     requires = ['django (>=1.2)'],
-
+    extras_require = {
+        'views':  ["django-extra-views", "django-crispy-forms"]
+    },
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
