@@ -26,4 +26,7 @@ from django.core.urlresolvers import reverse as django_reverse
 
 
 def reverse(url_name, *args, **kwargs):
+    if 'args' in kwargs or 'kwargs' in kwargs:
+        raise Exception("You are using django_helpful.reverse, you can pass "
+                        "arguments directly.")
     return django_reverse(url_name, args=args, kwargs=kwargs)

@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name='django_helpful',
-    version="0.3",
+    version="0.3.1",
     author='Raphael Kimmig',
     author_email='raphael.kimmig@ampad.de',
     url = 'https://github.com/RaphaelKimmig/django_helpful',
