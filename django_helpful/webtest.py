@@ -25,13 +25,26 @@ import django_webtest
 
 
 class WebTest(django_webtest.WebTest):
-    def assertFormHasNoErrors(self, response, form_context_name='form'):
+    def assertFormHasNoErrors(self, response, form_context_name='form', formset_context_name='formset'):
+        """Raise error if formset or form with errors is in context"""
         if getattr(response, 'context', None) is None:
             return
 
+        # context doesn't raise if not found
         form = response.context[form_context_name]
-        if not form:
+        formset = response.context[formset_context_name]
+
+        if not form and not formset:
             return
 
-        if getattr(form, 'errors', None):
-            raise AssertionError("Form contains errors: \n%s" % form.errors.as_text())
+        error_text = ''
+        if form and getattr(form, 'errors', None):
+            error_text = "Form contains errors: \n%s\n" % form.errors.as_text()
+
+        if formset and getattr(formset, 'errors', None):
+            for index, errors in enumerate(formset.errors):
+                if errors:
+                    error_text += 'Formset form #%d contains errors: \n%s\n' % (index, errors.as_text())
+
+        if error_text:
+            raise AssertionError(error_text)
