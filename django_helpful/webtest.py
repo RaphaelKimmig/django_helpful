@@ -29,6 +29,8 @@ class WebTest(django_webtest.WebTest):
         if getattr(response, 'context', None) is None:
             return
 
+        if form_context_name not in response.context:
+            return
         form = response.context[form_context_name]
         if not form:
             return
