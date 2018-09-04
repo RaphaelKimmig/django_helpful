@@ -22,8 +22,10 @@
 
 __ALL__ = ['reverse']
 
-from django.core.urlresolvers import reverse as django_reverse
-
+try:
+    from django.core.urlresolvers import reverse as django_reverse
+except ImportError:
+    from django.urls import reverse as django_reverse
 
 def reverse(url_name, *args, **kwargs):
     if 'args' in kwargs or 'kwargs' in kwargs:
